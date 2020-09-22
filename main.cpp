@@ -1,13 +1,18 @@
 #include "datetime.hpp"
 
+#include <fstream>
 #include <iostream>
+#include <string>
+#include <vector>
+
+namespace Test {
 
 void runTest(DateTime &dt)
 {
     std::cout << '\n';
 
     std::cout << "Current day: ";
-    dt.get();
+    dt.getDate();
 
     std::cout << "Next day: ";
     dt.getNextDay();
@@ -16,33 +21,79 @@ void runTest(DateTime &dt)
     dt.getPrevDay();
 }
 
+}; // namespace Test
+
+
+namespace Fmt {
+
+void refreshFile(std::ifstream& file)
+{
+    file.clear();
+    file.seekg(0, file.beg);
+}
+
+size_t countLines(std::ifstream &file)
+{
+    int count = 0;
+
+    for (std::string buffer; file; ++count) {
+        std::getline(file, buffer);
+    }
+
+    Fmt::refreshFile(file);
+
+    return count - 1;
+}
+
+std::string getString(const std::string &message)
+{
+    std::cout << message;
+
+    std::string buffer;
+    std::getline(std::cin, buffer);
+
+    return buffer;
+}
+
+void openFile(std::ifstream &file, const std::string &message)
+{
+    do
+    {
+        file.open(Fmt::getString(message));
+    }
+    while (!file.is_open());
+}
+
+}; // namespace Fmt
+
 int main()
 {
-    DateTime dt1;
-    runTest(dt1);
+    std::ifstream file;
+    Fmt::openFile(file, "Type the filename: ");
 
-    DateTime dt2 = { 21, 9, 2020 };
-    runTest(dt2);
+    size_t lineCount = Fmt::countLines(file);
+    std::vector<DateTime> dates(lineCount);
 
-    DateTime dt3 = { 1, 9, 2020 };
-    runTest(dt3);
+    std::string line;
 
-    // Previous day is leap
-    DateTime dt4 = { 1, 3, 2020 };
-    runTest(dt4);
+    for (DateTime& date : dates) {
+        std::getline(file, line);
+        date.parseDate(line);
+    }
 
-    DateTime dt5 = { 1, 1, 2019 };
-    runTest(dt5);
+    for (size_t i = 1; i <= lineCount; ++i) {
+        std::cout << i << ". ";
 
-    DateTime dt6 = { 30, 9, 2020 };
-    runTest(dt6);
+        dates[i - 1].getDate();
 
-    // Next day is leap
-    DateTime dt7 = { 28, 2, 2020 };
-    runTest(dt7);
+        std::cout << ' ';
+        dates[i - 1].getNextDay();
 
-    DateTime dt8 = { 31, 12, 2020 };
-    runTest(dt8);
+        std::cout << ' ';
+        dates[i - 1].getPrevDay();
+
+        std::cout << '\n';
+    }
 
     return 0;
 }

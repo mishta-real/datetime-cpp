@@ -1,6 +1,8 @@
 #ifndef DATETIME_HPP
 #define DATETIME_HPP
 
+#include <string>
+
 const int FIRST_YEAR = 1970;
 const int FIRST_MONTH = 1;
 const int FIRST_DAY = 1;
@@ -42,15 +44,29 @@ struct DateTime {
     int minute{ FIRST_MINUTE };
     int second{ FIRST_SECOND };
 
-    void get();
-
     inline bool isYearLeap();
+
+    void getFull();
+    void getDate();
+    void getTime();
 
     void getNextDay(DateTime &dt);
     void getNextDay();
 
     void getPrevDay(DateTime &dt);
     void getPrevDay();
+
+    void parseDate(const std::string &line);
 };
+
+bool isYearLeap(const int t_year);
+
+bool isDayCorrect(const int t_day, const int t_month, const int t_year);
+bool isMonthCorrect(const int t_month);
+bool isYearCorrect(const int t_year);
+
+void dayIncorrectError(const int t_day);
+void monthIncorrectError(const int t_month);
+void yearIncorrectError(const int t_year);
 
 #endif
