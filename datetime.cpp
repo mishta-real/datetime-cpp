@@ -248,7 +248,7 @@ bool isYearCorrect(const int t_year)
     return FIRST_YEAR <= t_year;
 }
 
-void dayIncorrectError(const int t_day)
+void dayIncorrectError(const int t_day=0)
 {
     if (t_day) {
         std::cerr << "Incorrect day " << t_day;
@@ -260,7 +260,7 @@ void dayIncorrectError(const int t_day)
     std::exit(1);
 }
 
-void monthIncorrectError(const int t_month)
+void monthIncorrectError(const int t_month=0)
 {
     if (t_month) {
         std::cerr << "Incorrect month " << t_month;
@@ -272,7 +272,7 @@ void monthIncorrectError(const int t_month)
     std::exit(1);
 }
 
-void yearIncorrectError(const int t_year)
+void yearIncorrectError(const int t_year=0)
 {
     if (t_year) {
         std::cerr << "Incorrect year " << t_year;
