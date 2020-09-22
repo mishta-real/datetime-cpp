@@ -69,4 +69,6 @@ void dayIncorrectError(const int t_day);
 void monthIncorrectError(const int t_month);
 void yearIncorrectError(const int t_year);
 
+DateTime systemTime();
+
 #endif

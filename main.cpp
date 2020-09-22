@@ -1,6 +1,7 @@
 #include "datetime.hpp"
 
 #include <fstream>
+#include <iomanip>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -81,8 +82,10 @@ int main()
         date.parseDate(line);
     }
 
-    for (size_t i = 1; i <= lineCount; ++i) {
-        std::cout << i << ". ";
+    std::cout << "\nDates:\n";
+
+    for (size_t i = 1, t = std::to_string(lineCount).length(); i <= lineCount; ++i) {
+        std::cout << std::setfill(' ') << std::setw(t) << i << ". ";
 
         dates[i - 1].getDate();
 
@@ -94,6 +97,38 @@ int main()
 
         std::cout << '\n';
     }
+
+// ============================================================================
+
+    std::cout << "\nDates with previous date in a previous year:\n";
+
+    for (size_t i = 1, t = std::to_string(lineCount).length(); i <= lineCount; ++i) {
+        if (dates[i - 1].day == FIRST_DAY && dates[i - 1].month == FIRST_MONTH) {
+            if (dates[i - 1].year != FIRST_YEAR) {
+                std::cout << std::setfill(' ') << std::setw(t) << i << ". ";
+
+                dates[i - 1].getDate();
+
+                std::cout << ' ';
+                dates[i - 1].getPrevDay();
+
+            }
+            else {
+                std::cout
+                    << std::setfill(' ') << std::setw(t) << i
+                    << ". 01.01.1970 31.12.1969";
+            }
+            std::cout << '\n';
+        }
+    }
+
+// ============================================================================
+
+    DateTime dateTimeNow = systemTime();
+
+    std::cout << "\nCurrent system time: ";
+    dateTimeNow.getFull();
+    std::cout << '\n';
 
     return 0;
 }

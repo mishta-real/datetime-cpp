@@ -1,6 +1,7 @@
 #include "datetime.hpp"
 
 #include <cctype>
+#include <ctime>
 #include <iomanip>
 #include <iostream>
 
@@ -282,4 +283,21 @@ void yearIncorrectError(const int t_year=0)
     }
     std::cout << std::endl;
     std::exit(1);
+}
+
+DateTime systemTime()
+{
+    time_t t = std::time(0);
+    tm *now = std::localtime(&t);
+
+    DateTime sysTime = {
+        now->tm_mday,
+        now->tm_mon + 1,
+        now->tm_year + 1900,
+        now->tm_hour,
+        now->tm_min,
+        now->tm_sec
+    };
+
+    return sysTime;
 }
