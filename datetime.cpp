@@ -14,7 +14,12 @@ bool isYearLeap(const int t_year)
         (t_year % 400 == 0);
 }
 
-inline bool isDayCorrect(const int t_day, const int t_month, const int t_year)
+bool areYearsCorrect(const int t_years)
+{
+    return 0 <= t_years && t_years <= 99;
+}
+
+bool isDayCorrect(const int t_day, const int t_month, const int t_year)
 {
     if (!isYearLeap(t_year) || t_month != 2) {
         return FIRST_DAY <= t_day && t_day <= DAYS_IN_MONTH[t_month];
@@ -24,14 +29,30 @@ inline bool isDayCorrect(const int t_day, const int t_month, const int t_year)
     }
 }
 
-inline bool isMonthCorrect(const int t_month)
+bool isMonthCorrect(const int t_month)
 {
     return FIRST_MONTH <= t_month && t_month <= MONTHS_IN_YEAR;
 }
 
-inline bool isYearCorrect(const int t_year)
+bool isYearCorrect(const int t_year)
 {
     return FIRST_YEAR <= t_year;
+}
+
+bool isHourCorrect(const int t_hour)
+{
+    return 0 <= t_hour && t_hour <= 23;
+}
+
+bool isMinuteCorrect(const int t_minute)
+{
+
+    return 0 <= t_minute && t_minute <= 59;
+}
+
+bool isSecondCorrect(const int t_second)
+{
+    return 0 <= t_second && t_second <= 59;
 }
 
 void dayIncorrectError(const int t_day=0)
@@ -40,7 +61,7 @@ void dayIncorrectError(const int t_day=0)
         std::cerr << "Incorrect day " << t_day;
     }
     else {
-        std::cerr << "Given day is incorrect";
+        std::cerr << "Could not read the day";
     }
     std::cout << std::endl;
     std::exit(1);
@@ -52,7 +73,7 @@ void monthIncorrectError(const int t_month=0)
         std::cerr << "Incorrect month " << t_month;
     }
     else {
-        std::cerr << "Given month is incorrect";
+        std::cerr << "Could not read the month";
     }
     std::cout << std::endl;
     std::exit(1);
@@ -64,7 +85,44 @@ void yearIncorrectError(const int t_year=0)
         std::cerr << "Incorrect year " << t_year;
     }
     else {
-        std::cerr << "Given year is incorrect";
+        std::cerr << "Could not read the year";
+    }
+    std::cout << std::endl;
+    std::exit(1);
+}
+
+void hourIncorrectError(const int t_hour=-1)
+{
+    if (t_hour != -1) {
+        std::cerr << "Incorrect hour " << t_hour;
+    }
+    else {
+        std::cerr << "Could not read the hours";
+    }
+    std::cout << std::endl;
+    std::exit(1);
+
+}
+
+void minuteIncorrectError(const int t_minute=-1)
+{
+    if (t_minute != -1) {
+        std::cerr << "Incorrect minute " << t_minute;
+    }
+    else {
+        std::cerr << "Could not read the minutes";
+    }
+    std::cout << std::endl;
+    std::exit(1);
+}
+
+void secondIncorrectError(const int t_second=-1)
+{
+    if (t_second != -1) {
+        std::cerr << "Incorrect second " << t_second;
+    }
+    else {
+        std::cerr << "Could not read the seconds";
     }
     std::cout << std::endl;
     std::exit(1);
@@ -177,36 +235,36 @@ void DateTime::getPrevDay()
         std::setw(4) << prevYear;
 }
 
-TimeDelta::TimeDelta DateTime::operator-(const DateTime &datetime2) const
+TimeDelta::TimeDelta DateTime::operator-(const DateTime &dt2) const
 {
-    long long dt1_seconds = dateToSeconds(*this);
-    long long dt2_seconds = dateToSeconds(datetime2);
+    const long long dt1_seconds = dateToSeconds(*this);
+    const long long dt2_seconds = dateToSeconds(dt2);
 
-    long long timedelta_seconds = std::abs(dt1_seconds - dt2_seconds);
+    const long long td_seconds = std::abs(dt1_seconds - dt2_seconds);
 
     TimeDelta::TimeDelta td;
-    TimeDelta::secondsToTimeDelta(timedelta_seconds, td);
+    TimeDelta::secondsToTimeDelta(td_seconds, td);
     return td;
 }
 
-DateTime DateTime::operator+(const TimeDelta::TimeDelta &timedelta) const
+DateTime DateTime::operator+(const TimeDelta::TimeDelta &td) const
 {
-    long long dt1_seconds = dateToSeconds(*this);
-    long long td_seconds = TimeDelta::timeDeltaToSeconds(timedelta);
+    const long long dt1_seconds = dateToSeconds(*this);
+    const long long td_seconds = TimeDelta::timeDeltaToSeconds(td);
 
-    long long dt2_seconds = dt1_seconds + td_seconds;
+    const long long dt2_seconds = dt1_seconds + td_seconds;
 
     DateTime dt2;
     secondsToDate(dt2_seconds, dt2);
     return dt2;
 }
 
-DateTime DateTime::operator-(const TimeDelta::TimeDelta &timedelta)
+DateTime DateTime::operator-(const TimeDelta::TimeDelta &td)
 {
-    long long dt1_seconds = dateToSeconds(*this);
-    long long td_seconds = TimeDelta::timeDeltaToSeconds(timedelta);
+    const long long dt1_seconds = dateToSeconds(*this);
+    const long long td_seconds = TimeDelta::timeDeltaToSeconds(td);
 
-    long long dt2_seconds = dt1_seconds > td_seconds ? dt1_seconds - td_seconds : 0;
+    const long long dt2_seconds = dt1_seconds > td_seconds ? dt1_seconds - td_seconds : 0;
 
     DateTime dt2;
     if (dt2_seconds) {
@@ -221,66 +279,110 @@ DateTime DateTime::operator-(const TimeDelta::TimeDelta &timedelta)
     return dt2;
 }
 
-void parseDate(const std::string &dateString, DateTime &date)
+void parseDateTime(const std::string &dtString, DateTime &dt)
 {
-    // The only format is "DD.MM.YYYY"
+    // The only format is "dd.mm.yyyy hh:mm:ss"
 
     // Parsing the day
-    if (std::isdigit(dateString[0])
-        && std::isdigit(dateString[1]))
-    {
-        int bufferDay = (dateString[0] - '0') * 10
-            + (dateString[1] - '0');
-
-        if (isDayCorrect(bufferDay, date.month, date.year)) {
-            date.day = bufferDay;
-        }
-        else {
-            dayIncorrectError(bufferDay);
-        }
+    int bufferDay = 0;
+    if (std::isdigit(dtString[0]) && std::isdigit(dtString[1])) {
+        bufferDay = (dtString[0] - '0') * 10 + (dtString[1] - '0');
     }
     else {
-        dayIncorrectError(0);
+        dayIncorrectError();
     }
 
     // Parsing the month
-    if (std::isdigit(dateString[3])
-        && std::isdigit(dateString[4]))
-    {
-        int bufferMonth = (dateString[3] - '0') * 10
-            + (dateString[4] - '0');
-
-        if (isMonthCorrect(bufferMonth)) {
-            date.month = bufferMonth;
-        }
-        else {
-            monthIncorrectError(bufferMonth);
-        }
+    int bufferMonth = 0;
+    if (std::isdigit(dtString[3]) && std::isdigit(dtString[4])) {
+        bufferMonth = (dtString[3] - '0') * 10 + (dtString[4] - '0');
     }
     else {
-        monthIncorrectError(0);
+        monthIncorrectError();
     }
 
     // Parsing the year
-    if (std::isdigit(dateString[6])
-        && std::isdigit(dateString[7])
-        && std::isdigit(dateString[8])
-        && std::isdigit(dateString[9]))
+    int bufferYear = 0;
+    if (std::isdigit(dtString[6]) && std::isdigit(dtString[7])
+        && std::isdigit(dtString[8]) && std::isdigit(dtString[9]))
     {
-        int bufferYear = (dateString[6] - '0') * 1000
-            + (dateString[7] - '0') * 100
-            + (dateString[8] - '0') * 10
-            + (dateString[9] - '0');
+        bufferYear = (dtString[6] - '0') * 1000
+            + (dtString[7] - '0') * 100
+            + (dtString[8] - '0') * 10
+            + (dtString[9] - '0');
+    }
+    else {
+        yearIncorrectError();
+    }
 
-        if (isYearCorrect(bufferYear)) {
-            date.year = bufferYear;
+    // Checking the day
+    if (isDayCorrect(bufferDay, bufferMonth, bufferYear)) {
+        dt.day = bufferDay;
+    }
+    else {
+        dayIncorrectError(bufferDay);
+    }
+
+    // Checking the month
+    if (isMonthCorrect(bufferMonth)) {
+        dt.month = bufferMonth;
+    }
+    else {
+        monthIncorrectError(bufferMonth);
+    }
+
+    // Checking the year
+    if (isYearCorrect(bufferYear)) {
+        dt.year = bufferYear;
+    }
+    else {
+        yearIncorrectError(bufferYear);
+    }
+
+    // Parsing the hour
+    if (std::isdigit(dtString[11]) && std::isdigit(dtString[12]))
+    {
+        int bufferHour = (dtString[11] - '0') * 10 + (dtString[12] - '0');
+
+        if (isHourCorrect(bufferHour)) {
+            dt.hour = bufferHour;
         }
         else {
-            yearIncorrectError(bufferYear);
+            hourIncorrectError(bufferHour);
         }
     }
     else {
-        yearIncorrectError(0);
+        hourIncorrectError();
+    }
+
+    // Parsing the minutes
+    if (std::isdigit(dtString[14]) && std::isdigit(dtString[15])) {
+        int bufferMinute = (dtString[14] - '0') * 10 + (dtString[15] - '0');
+
+        if (isMinuteCorrect(bufferMinute)) {
+            dt.minute = bufferMinute;
+        }
+        else {
+            minuteIncorrectError(bufferMinute);
+        }
+    }
+    else {
+        minuteIncorrectError();
+    }
+
+    // Parsing the seconds
+    if (std::isdigit(dtString[17]) && std::isdigit(dtString[18])) {
+        int bufferSecond = (dtString[17] - '0') * 10 + (dtString[18] - '0');
+
+        if (isSecondCorrect(bufferSecond)) {
+            dt.second = bufferSecond;
+        }
+        else {
+            secondIncorrectError(bufferSecond);
+        }
+    }
+    else {
+        secondIncorrectError();
     }
 }
 
@@ -305,7 +407,35 @@ DateTime systemTime()
 // Get date since epoch in seconds
 long long int dateToSeconds(const DateTime &dt)
 {
-    long long int seconds = dt.second
+    const long long time_seconds = dt.second
+        + dt.minute * SECONDS_IN_MINUTE
+        + dt.hour * SECONDS_IN_HOUR;
+
+    long long date_seconds = (dt.day - 1) * SECONDS_IN_DAY;
+
+    for (int t_month = dt.month - 1; t_month >= FIRST_MONTH; --t_month)
+    {
+        if (!isYearLeap(dt.year) || t_month != 2) {
+            date_seconds += DAYS_IN_MONTH[t_month] * SECONDS_IN_DAY;
+        }
+        else {
+            date_seconds += DAYS_IN_LEAP_MONTH * SECONDS_IN_DAY;
+        }
+    }
+
+    for (int t_year = dt.year - 1; t_year >= FIRST_YEAR; --t_year)
+    {
+        if (!isYearLeap(t_year)) {
+            date_seconds += DAYS_IN_YEAR * SECONDS_IN_DAY;
+        }
+        else {
+            date_seconds += DAYS_IN_LEAP_YEAR * SECONDS_IN_DAY;
+        }
+    }
+
+    return date_seconds + time_seconds;
+}
+/*    long long int seconds = dt.second
         + dt.minute * SECONDS_IN_MINUTE
         + dt.hour * SECONDS_IN_HOUR
         + (dt.day - 1) * SECONDS_IN_DAY;
@@ -329,13 +459,12 @@ long long int dateToSeconds(const DateTime &dt)
     }
 
     return seconds;
-}
+} */
 
 // Get date since epoch in normal format
 void secondsToDate(const long long seconds, DateTime &dt)
 {
     const int time_seconds = seconds % SECONDS_IN_DAY;
-
     dt.hour = time_seconds / SECONDS_IN_HOUR;
     dt.minute = time_seconds / MINUTES_IN_HOUR % SECONDS_IN_MINUTE;
     dt.second = time_seconds % SECONDS_IN_MINUTE;

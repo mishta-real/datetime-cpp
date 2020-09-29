@@ -23,6 +23,7 @@ constexpr int DAYS_IN_MONTH[MONTHS_IN_YEAR + 1] = {
     31, 30, 31
 };
 constexpr int DAYS_IN_LEAP_MONTH = 29;
+constexpr double DAYS_IN_MONTH_APPR = 30.44;
 
 constexpr int DAYS_IN_YEAR = 365;
 constexpr int DAYS_IN_LEAP_YEAR = 366;
@@ -37,9 +38,9 @@ constexpr int SECONDS_IN_HOUR = SECONDS_IN_MINUTE * MINUTES_IN_HOUR;
 constexpr int SECONDS_IN_DAY = SECONDS_IN_HOUR * HOURS_IN_DAY;
 // constexpr int SECONDS_IN_28_DAYS = SECONDS_IN_DAY * 28;
 // constexpr int SECONDS_IN_29_DAYS = SECONDS_IN_DAY * 29;
-// constexpr int SECONDS_IN_30_DAYS = SECONDS_IN_DAY * 30;
-// constexpr int SECONDS_IN_31_DAYS = SECONDS_IN_DAY * 31;
-// constexpr int SECONDS_IN_MONTH = SECONDS_IN_DAY * DAYS_IN_MONTH_APPR;
+constexpr int SECONDS_IN_30_DAYS = SECONDS_IN_DAY * 30;
+constexpr int SECONDS_IN_31_DAYS = SECONDS_IN_DAY * 31;
+constexpr int SECONDS_IN_MONTH = SECONDS_IN_DAY * DAYS_IN_MONTH_APPR;
 constexpr int SECONDS_IN_YEAR = SECONDS_IN_DAY * DAYS_IN_YEAR;
 constexpr int SECONDS_IN_LEAP_YEAR = SECONDS_IN_DAY * DAYS_IN_LEAP_YEAR;
 
@@ -66,7 +67,7 @@ struct DateTime {
     // void getPrevDay(DateTime &dt);
     void getPrevDay();
 
-    TimeDelta::TimeDelta operator-(const DateTime &datetime2) const;
+    TimeDelta::TimeDelta operator-(const DateTime &dt2) const;
 
     DateTime operator+(const TimeDelta::TimeDelta &timedelta) const;
     DateTime operator-(const TimeDelta::TimeDelta &timedelta);
@@ -74,15 +75,22 @@ struct DateTime {
 
 bool isYearLeap(const int t_year);
 
-inline bool isDayCorrect(const int t_day, const int t_month, const int t_year);
-inline bool isMonthCorrect(const int t_month);
-inline bool isYearCorrect(const int t_year);
+bool areYearsCorrect(const int t_years);
+bool isDayCorrect(const int t_day, const int t_month, const int t_year);
+bool isMonthCorrect(const int t_month);
+bool isYearCorrect(const int t_year);
+bool isHourCorrect(const int t_hour);
+bool isMinuteCorrect(const int t_minute);
+bool isSecondCorrect(const int t_second);
 
 void dayIncorrectError(const int t_day);
 void monthIncorrectError(const int t_month);
 void yearIncorrectError(const int t_year);
+void hourIncorrectError(const int t_hour);
+void minuteIncorrectError(const int t_minute);
+void secondIncorrectError(const int t_second);
 
-void parseDate(const std::string &dateString, DateTime &date);
+void parseDateTime(const std::string &dtString, DateTime &dt);
 
 DateTime systemTime();
 

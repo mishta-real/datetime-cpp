@@ -1,6 +1,8 @@
 #ifndef TIMEDELTA_HPP
 #define TIMEDELTA_HPP
 
+#include <string>
+
 namespace TimeDelta {
 
 struct TimeDelta {
@@ -18,8 +20,9 @@ struct TimeDelta {
     TimeDelta operator-(const TimeDelta &timedelta2);
 };
 
-void secondsToTimeDelta(const long long t_seconds, TimeDelta &td);
+void parseTimeDelta(const std::string &tdString, TimeDelta &td);
 
+void secondsToTimeDelta(const long long t_seconds, TimeDelta &td);
 long long timeDeltaToSeconds(const TimeDelta &td);
 
 } // namespace TimeDelta
