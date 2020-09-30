@@ -35,7 +35,6 @@ struct DateTime {
 
 inline bool isYearLeap(const int t_year);
 
-inline bool areYearsCorrect(const int t_years);
 inline bool isDayCorrect(const int t_day, const int t_month, const int t_year);
 inline bool isMonthCorrect(const int t_month);
 inline bool isYearCorrect(const int t_year);
