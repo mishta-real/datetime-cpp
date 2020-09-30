@@ -1,3 +1,4 @@
+#include "constants.hpp"
 #include "datetime.hpp"
 
 #include <cctype>
@@ -7,19 +8,14 @@
 
 namespace DateTime {
 
-bool isYearLeap(const int t_year)
+inline bool isYearLeap(const int t_year)
 {
     return
         ((t_year % 4 == 0) && (t_year % 100 != 0)) ||
         (t_year % 400 == 0);
 }
 
-bool areYearsCorrect(const int t_years)
-{
-    return 0 <= t_years && t_years <= 99;
-}
-
-bool isDayCorrect(const int t_day, const int t_month, const int t_year)
+inline bool isDayCorrect(const int t_day, const int t_month, const int t_year)
 {
     if (!isYearLeap(t_year) || t_month != 2) {
         return FIRST_DAY <= t_day && t_day <= DAYS_IN_MONTH[t_month];
@@ -29,33 +25,33 @@ bool isDayCorrect(const int t_day, const int t_month, const int t_year)
     }
 }
 
-bool isMonthCorrect(const int t_month)
+inline bool isMonthCorrect(const int t_month)
 {
     return FIRST_MONTH <= t_month && t_month <= MONTHS_IN_YEAR;
 }
 
-bool isYearCorrect(const int t_year)
+inline bool isYearCorrect(const int t_year)
 {
     return FIRST_YEAR <= t_year;
 }
 
-bool isHourCorrect(const int t_hour)
+inline bool isHourCorrect(const int t_hour)
 {
     return 0 <= t_hour && t_hour <= 23;
 }
 
-bool isMinuteCorrect(const int t_minute)
+inline bool isMinuteCorrect(const int t_minute)
 {
 
     return 0 <= t_minute && t_minute <= 59;
 }
 
-bool isSecondCorrect(const int t_second)
+inline bool isSecondCorrect(const int t_second)
 {
     return 0 <= t_second && t_second <= 59;
 }
 
-void dayIncorrectError(const int t_day=0)
+void dayIncorrectError(const int t_day)
 {
     if (t_day) {
         std::cerr << "Incorrect day " << t_day;
@@ -67,7 +63,7 @@ void dayIncorrectError(const int t_day=0)
     std::exit(1);
 }
 
-void monthIncorrectError(const int t_month=0)
+void monthIncorrectError(const int t_month)
 {
     if (t_month) {
         std::cerr << "Incorrect month " << t_month;
@@ -79,7 +75,7 @@ void monthIncorrectError(const int t_month=0)
     std::exit(1);
 }
 
-void yearIncorrectError(const int t_year=0)
+void yearIncorrectError(const int t_year)
 {
     if (t_year) {
         std::cerr << "Incorrect year " << t_year;
@@ -91,7 +87,7 @@ void yearIncorrectError(const int t_year=0)
     std::exit(1);
 }
 
-void hourIncorrectError(const int t_hour=-1)
+void hourIncorrectError(const int t_hour)
 {
     if (t_hour != -1) {
         std::cerr << "Incorrect hour " << t_hour;
@@ -104,7 +100,7 @@ void hourIncorrectError(const int t_hour=-1)
 
 }
 
-void minuteIncorrectError(const int t_minute=-1)
+void minuteIncorrectError(const int t_minute)
 {
     if (t_minute != -1) {
         std::cerr << "Incorrect minute " << t_minute;
@@ -116,7 +112,7 @@ void minuteIncorrectError(const int t_minute=-1)
     std::exit(1);
 }
 
-void secondIncorrectError(const int t_second=-1)
+void secondIncorrectError(const int t_second)
 {
     if (t_second != -1) {
         std::cerr << "Incorrect second " << t_second;
@@ -151,6 +147,7 @@ void DateTime::getDate() const
         std::setw(4) << year;
 }
 
+/*
 // Print time
 void DateTime::getTime() const
 {
@@ -160,6 +157,7 @@ void DateTime::getTime() const
         std::setw(2) << minute << ':' <<
         std::setw(2) << second;
 }
+*/
 
 void DateTime::getNextDay() const
 {
@@ -435,31 +433,6 @@ long long int dateToSeconds(const DateTime &dt)
 
     return date_seconds + time_seconds;
 }
-/*    long long int seconds = dt.second
-        + dt.minute * SECONDS_IN_MINUTE
-        + dt.hour * SECONDS_IN_HOUR
-        + (dt.day - 1) * SECONDS_IN_DAY;
-
-    for (int t_month = dt.month - 1; t_month >= FIRST_MONTH; --t_month) {
-        if (!isYearLeap(dt.year) || t_month != 2) {
-            seconds += DAYS_IN_MONTH[t_month] * SECONDS_IN_DAY;
-        }
-        else {
-            seconds += DAYS_IN_LEAP_MONTH * SECONDS_IN_DAY;
-        }
-    }
-
-    for (int t_year = dt.year - 1; t_year >= FIRST_YEAR; --t_year) {
-        if (!isYearLeap(t_year)) {
-            seconds += DAYS_IN_YEAR * SECONDS_IN_DAY;
-        }
-        else {
-            seconds += DAYS_IN_LEAP_YEAR * SECONDS_IN_DAY;
-        }
-    }
-
-    return seconds;
-} */
 
 // Get date since epoch in normal format
 void secondsToDate(const long long seconds, DateTime &dt)

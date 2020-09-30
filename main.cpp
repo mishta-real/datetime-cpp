@@ -1,3 +1,4 @@
+#include "constants.hpp"
 #include "datetime.hpp"
 #include "timedelta.hpp"
 
@@ -177,7 +178,7 @@ void task4()
             DateTime::DateTime dt_end;
             DateTime::parseDateTime(dt_string, dt_end);
 
-            std::cout << "\nStart datetime: ";
+            std::cout << "\n\nStart datetime: ";
             dt_start.getDateTime();
 
             std::cout << "\nEnd datetime: ";
@@ -198,7 +199,7 @@ void task4()
             TimeDelta::TimeDelta td;
             TimeDelta::parseTimeDelta(td_string, td);
 
-            std::cout << "\nDatetime: ";
+            std::cout << "\n\nDatetime: ";
             dt1.getDateTime();
 
             std::cout << "\n\nTime period: ";
@@ -219,7 +220,7 @@ void task4()
             TimeDelta::TimeDelta td2;
             TimeDelta::parseTimeDelta(td2_string, td2);
 
-            std::cout << "\nFirst time period: ";
+            std::cout << "\n\nFirst time period: ";
             td1.get();
 
             std::cout << "\n\nSecond time period: ";
@@ -232,15 +233,15 @@ void task4()
             std::cout << "\n\n";
         }
         else if (choice == 4) {
-            std::string td1_string = Fmt::getString("Enter the first time period (yy mm dd hh:mm:ss) (1y=365d, 1mo=30d): ");
+            std::string td1_string = Fmt::getString("\nEnter the first time period (yy mm dd hh:mm:ss) (1y=365d, 1mo=30d): ");
             TimeDelta::TimeDelta td1;
             TimeDelta::parseTimeDelta(td1_string, td1);
 
-            std::string td2_string = Fmt::getString("Enter the second time period (yy mm dd hh:mm:ss) (1y=365d, 1mo=30d): ");
+            std::string td2_string = Fmt::getString("\nEnter the second time period (yy mm dd hh:mm:ss) (1y=365d, 1mo=30d): ");
             TimeDelta::TimeDelta td2;
             TimeDelta::parseTimeDelta(td2_string, td2);
 
-            std::cout << "\nFirst time period: ";
+            std::cout << "\n\nFirst time period: ";
             td1.get();
 
             std::cout << "\n\nSecond time period: ";
@@ -260,7 +261,7 @@ void task4()
 int askChoice()
 {
     std::cout << "Your choice: ";
-    int choice;
+    int choice = 0;
     std::cin >> choice;
 
     return choice;
@@ -268,7 +269,7 @@ int askChoice()
 
 void menu()
 {
-    int choice;
+    int choice = 0;
 
     do {
         std::cout << MENU;
@@ -300,7 +301,6 @@ void menu()
         }
     } while (choice == T_1 || choice == T_2 || choice == T_3 || choice == T_4);
 }
-// ============================================================================
 
 int main()
 {
